@@ -1,32 +1,61 @@
-import React from 'react';
-import ContactTable from './ContactTable';
-import { useNavigate } from 'react-router-dom';
-import { ContactPage } from './styleComponents';
+import React,{useEffect,useState} from "react";
+import ContactTable from "./ContactTable";
+import { useNavigate } from "react-router-dom";
+import { ContactPage } from "./styleComponents";
 
-export default function ContactList({ contacts }) {
-    let navigate = useNavigate();
+ function ContactList(props) {
+  const [contactsList, setContactsList] = useState(false);
+ 
+  const getDataList = () =>{
+    if (localStorage.getItem("contacts")) {
+      return JSON.parse(localStorage.getItem("contacts"))
+  };
+  }
 
-    return (
-        <ContactPage>
-            <div className='d-flex justify-content-between mx-5 align-items-center'>
-                <div>Contact List</div>
-                <button type="button" className="btn btn-outline-secondary add_contact_btn" onClick={() => { navigate("/add-contact") }}>Add Contact</button>
-            </div>
-            <div className='m-auto' style={{ width: '80vw' }}>
-                <ContactTable contact={JSON.parse(contacts)} />
-            </div>
-        </ContactPage>
-    );
-}
+  useEffect(() => {
+    let contactData = getDataList()  
+    setContactsList(contactData);
+  }, []);
 
-function ContactCard(props) {
-    return (
-        <div>
-            <span>Name: {props.name}</span>
-            <span>Phone: {props.phone}</span>
-            <span>Type: {props.type}</span>
-            <span>Whatsapp Available: {props.isWhatsapp ? "Yes" : "No"}</span>
-            <image src={props.image}></image>
+  let navigate = useNavigate();
+  const handleUpdate = (val, index) =>{
+    navigate(`/edit-contact/${index + 1}`, {
+      state: {
+        data: val,
+        id : index
+      }
+    });
+  }
+
+  const handleDelete = (val, index) =>{
+    let tempLocalStorage = JSON.parse(localStorage.getItem("contacts"));
+    let filteredData =   tempLocalStorage.filter((el,i) => i !== index )
+    localStorage.setItem("contacts", JSON.stringify(filteredData));
+    setContactsList(filteredData);
+  }
+  return (
+    <ContactPage>
+      <div className="d-flex justify-content-between mx-5 align-items-center">
+        <div className="text_name">Contact List</div>
+        <button
+          type="button"
+          className="btn  add_contact_btn"
+          onClick={() => {
+            navigate("/add-contact");
+          }}
+        >
+          Add Contact
+        </button>
+      </div>
+      {contactsList?.length ? (
+        <div className="m-auto" style={{ width: "80vw" }}>
+          <ContactTable handleDelete={handleDelete} contact={contactsList} handleUpdate={handleUpdate} />
         </div>
-    )
+      ) : (
+          <div className="text-center text_name">No contacts Found Kindly Add</div>
+      )}
+    </ContactPage>
+  );
 }
+ 
+export default ContactList

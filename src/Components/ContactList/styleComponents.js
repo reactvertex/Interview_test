@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 export const TableContent = styled.div`
-
-
    .table  {
     border: 1px solid #515E63;
     border-radius: 5px;
@@ -20,5 +18,15 @@ export const ContactPage = styled.div`
    min-height:  100vh;
    .add_contact_btn{
        margin:  10px 0 30px 0 ;
+       background-color : #57837B;
+       color : #FFF;
+   }
+   .text_name{
+       color : #57837B;
+       font-weight : bold;
+       font-size : 30px;
+   }
+   .action_button{
+       cursor : pointer;
    }
 `;

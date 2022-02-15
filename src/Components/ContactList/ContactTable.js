@@ -1,7 +1,9 @@
 import React from 'react';
 import { TableContent } from './styleComponents';
+import deleteIcon from '../../assests/delete.png';
+import edit from '../../assests/edit.png';
 
-function ContactTable({ contact }) {
+function ContactTable({ contact,handleUpdate,handleDelete }) {
 
     return (
         <TableContent>
@@ -24,7 +26,10 @@ function ContactTable({ contact }) {
                             <td>{val.phone}</td>
                             <td>{val.contactTypes}</td>
                             <td>{val.isWhatsapp ? "Yes" : "No"}</td>
-                            <td><butto>Edit</butto></td>
+                            <td>
+                                <img height='15px' width='15px' src={edit} alt='editIcon' className='action_button' onClick={() =>handleUpdate(val, index)}/>
+                                <img height='15px' width='15px' src={deleteIcon} alt='deleteIcon' className='mx-3 action_button' onClick={() =>handleDelete(val, index)}/>
+                            </td>
                         </tr>
                     ))}
 
